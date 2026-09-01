@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paired t-test | Pedagogical Statistics Lab</title><link rel="stylesheet" href="../assets/css/style.css"></head>
+<body data-calc="pairedT">
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">Σ</span><span>Pedagogical Statistics Lab</span></a>
+    <div class="nav-links">
+      <a href="../index.html">Method selector</a>
+      <a href="../methods.html">All methods</a>
+      <a href="../guide.html">Study design guide</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero"><span class="eyebrow">One group, pre–post</span><h1>Paired t-test</h1><p>Compares the mean pre–post difference. The differences should be approximately normally distributed.</p></section>
+<main class="shell"><div class="method-layout">
+<section class="card"><div class="kicker">Data entry</div><h2>Calculate the result</h2><div class="input-grid"><div class="field"><label>Pre-test / condition A</label><textarea id="a" placeholder="12 15 9 18 14 11"></textarea></div><div class="field"><label>Post-test / condition B</label><textarea id="b" placeholder="15 17 12 19 17 14"></textarea></div></div><p class="muted">Enter one value per participant; spaces, commas or new lines are accepted. The order must match across both fields.</p>
+<div class="actions"><button id="calculateBtn" class="btn primary">Calculate</button><a class="btn ghost" href="../index.html">Back to selector</a></div>
+<div id="result" class="result"><h3>Result</h3><div class="muted">Enter your data and select Calculate.</div></div></section>
+<aside class="card"><div class="kicker">Method note</div><h2>When to use it</h2>
+<div class="badges"><span class="badge">Interval</span><span class="badge">Paired</span><span class="badge">Minimum: 7 pairs; preferably ≥30</span></div>
+<p class="muted">Compares the mean pre–post difference. The differences should be approximately normally distributed.</p><div class="note blue"><b>Conditions and limits:</b><br>Use only when the pre–post differences are reasonably compatible with a normal distribution. Large outliers can strongly affect the result.</div>
+<hr class="soft"><h3>How to interpret “effective”</h3><p class="muted">Treat the calculator output as evidence about a statistical pattern. A statistically significant result is not automatically proof that a teaching method is effective. Causal interpretation depends on the research design, baseline comparability, attrition, measurement reliability and alternative explanations.</p>
+</aside></div></main>
+<footer class="footer">
+  Educational decision-support tool for pedagogical research. Calculators are designed for teaching and preliminary analysis. For thesis publication or high-stakes reporting, verify assumptions and reproduce final analyses in a validated statistical package.
+</footer>
+
+<script src="../assets/js/stats.js"></script><script src="../assets/js/method-engine.js"></script></body></html>

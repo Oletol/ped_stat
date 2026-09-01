@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pedagogical Statistics Lab</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body><header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="brand-mark">Σ</span><span>Pedagogical Statistics Lab</span></a>
+    <div class="nav-links">
+      <a href="index.html">Method selector</a>
+      <a href="methods.html">All methods</a>
+      <a href="guide.html">Study design guide</a>
+    </div>
+  </nav>
+</header>
+<section class="hero"><span class="eyebrow">Research design → statistical method</span><h1>Build the analysis from the research question—not from the p-value.</h1>
+<p>This decision tree checks the research aim, scale, study design, distributional assumptions and approximate sample size. It then recommends methods that can be run completely in the browser.</p></section>
+<main class="shell">
+<div class="grid two">
+<section class="card">
+  <div class="tree-progress"><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span></div>
+  <h2>Statistical decision tree</h2>
+  <div class="tree-question"><h3>Step 1. What claim are you trying to support?</h3>
+    <select id="objective" data-recommend><option value="">Select…</option><option value="change">A learning outcome changed / groups differ</option><option value="association">Two indicators are related</option><option value="quality">A test, scale or expert rating is reliable enough to use</option><option value="mastery">A predefined mastery threshold or learning-gain level was reached</option></select>
+    <div class="why">Why this matters: a correlation question, a pre–post question and an instrument-quality question require different statistics.</div></div>
+  <div class="tree-question"><h3>Step 2. What kind of data represent the outcome?</h3>
+    <select id="scale" data-recommend><option value="">Select…</option><option value="binary">Binary nominal (pass/fail, yes/no)</option><option value="nominal">Nominal categories</option><option value="ordinal">Ordinal levels / ranks / rubric categories</option><option value="interval">Quantitative scores treated as interval</option><option value="percent">Pre/post percentage scores</option></select>
+    <div class="why">Why this matters: rank-based and categorical tests do not make the same assumptions as mean-based parametric tests.</div></div>
+  <div class="tree-question"><h3>Step 3. How were observations collected?</h3>
+    <select id="design" data-recommend><option value="">Select…</option><option value="paired2">One group, two paired measurements (pre–post)</option><option value="repeated3">One group, three or more repeated measurements</option><option value="independent2">Two independent groups</option><option value="independent3">Three or more independent groups</option><option value="items">Multi-item test / questionnaire pilot</option><option value="twoRaters">Two expert raters</option><option value="multiRaters">Three or more expert raters</option></select>
+    <div class="why">Why this matters: paired data must remain paired. Treating repeated observations as independent produces invalid standard errors.</div></div>
+  <div class="tree-question"><h3>Step 4. Are parametric assumptions defensible?</h3>
+    <select id="normality" data-recommend><option value="">Unknown / not applicable</option><option value="yes">Yes, approximately</option><option value="no">No / doubtful / strong outliers</option></select>
+    <div class="why">For a paired t-test, inspect the distribution of the paired differences rather than the two score distributions separately.</div></div>
+  <div class="tree-question"><h3>Step 5. Approximate sample size</h3><input id="sampleSize" data-recommend type="number" min="1" placeholder="e.g. 24">
+    <div class="why">The site flags very small samples. A non-significant result with low N should not be rewritten as “there is no effect”.</div></div>
+  <button class="btn primary" id="recommendBtn">Generate recommendation</button>
+</section>
+<aside class="card">
+  <h2>What can a statistical test establish?</h2>
+  <div class="note blue"><b>Difference ≠ effectiveness.</b><br>A significant result can support a claim that scores changed or groups differed. To attribute that difference to the teaching method, the design must address competing explanations.</div>
+  <hr class="soft">
+  <h3>Stronger causal evidence usually requires</h3>
+  <p class="muted">A comparison/control condition, baseline measurement, comparable groups or randomization where feasible, valid and reliable outcome measures, transparent handling of attrition and missing data, and an a priori analysis plan.</p>
+  <h3>Minimum reporting set</h3>
+  <p class="muted">N, descriptive statistics, test statistic, degrees of freedom where applicable, p-value, 95% confidence interval when estimable, effect size, assumptions/limitations, and a restrained interpretation.</p>
+</aside>
+</div>
+<section class="card" style="margin-top:20px"><h2>Your research logic</h2><div id="selectorSummary" class="muted">Complete the decision tree to generate a methodological rationale.</div></section>
+<section class="card" style="margin-top:20px"><h2>Recommended calculators</h2><div id="recommendations" class="recommendations"><div class="muted">Complete the decision tree to see recommendations.</div></div></section>
+</main><footer class="footer">
+  Educational decision-support tool for pedagogical research. Calculators are designed for teaching and preliminary analysis. For thesis publication or high-stakes reporting, verify assumptions and reproduce final analyses in a validated statistical package.
+</footer>
+<script src="assets/js/stats.js"></script><script src="assets/js/app.js"></script></body></html>

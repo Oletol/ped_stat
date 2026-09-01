@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Independent Samples t-test (Welch) | Pedagogical Statistics Lab</title><link rel="stylesheet" href="../assets/css/style.css"></head>
+<body data-calc="independentT">
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">Σ</span><span>Pedagogical Statistics Lab</span></a>
+    <div class="nav-links">
+      <a href="../index.html">Method selector</a>
+      <a href="../methods.html">All methods</a>
+      <a href="../guide.html">Study design guide</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero"><span class="eyebrow">Two independent groups</span><h1>Independent Samples t-test (Welch)</h1><p>Compares group means. Welch’s version is used by default because it does not require equal variances.</p></section>
+<main class="shell"><div class="method-layout">
+<section class="card"><div class="kicker">Data entry</div><h2>Calculate the result</h2><div class="input-grid"><div class="field"><label>Group 1</label><textarea id="group1" placeholder="72 68 80 76 71 75"></textarea></div><div class="field"><label>Group 2</label><textarea id="group2" placeholder="65 64 70 67 69 63"></textarea></div></div>
+<div class="actions"><button id="calculateBtn" class="btn primary">Calculate</button><a class="btn ghost" href="../index.html">Back to selector</a></div>
+<div id="result" class="result"><h3>Result</h3><div class="muted">Enter your data and select Calculate.</div></div></section>
+<aside class="card"><div class="kicker">Method note</div><h2>When to use it</h2>
+<div class="badges"><span class="badge">Interval</span><span class="badge">Independent</span><span class="badge">Minimum: Preferably ≥15 per group</span></div>
+<p class="muted">Compares group means. Welch’s version is used by default because it does not require equal variances.</p><div class="note blue"><b>Conditions and limits:</b><br>This page uses Welch’s t-test. Approximate normality and independence remain important, especially with small samples.</div>
+<hr class="soft"><h3>How to interpret “effective”</h3><p class="muted">Treat the calculator output as evidence about a statistical pattern. A statistically significant result is not automatically proof that a teaching method is effective. Causal interpretation depends on the research design, baseline comparability, attrition, measurement reliability and alternative explanations.</p>
+</aside></div></main>
+<footer class="footer">
+  Educational decision-support tool for pedagogical research. Calculators are designed for teaching and preliminary analysis. For thesis publication or high-stakes reporting, verify assumptions and reproduce final analyses in a validated statistical package.
+</footer>
+
+<script src="../assets/js/stats.js"></script><script src="../assets/js/method-engine.js"></script></body></html>

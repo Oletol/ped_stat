@@ -1,0 +1,132 @@
+
+const METHODS = [{"slug": "sign-test", "name": "Sign Test (G)", "block": "One group, pre–post", "scale": "Ordinal / interval", "samples": "Paired", "min": "5 non-zero changes", "desc": "Tests whether positive or negative changes predominate, ignoring the size of each change.", "type": "paired", "calc": "sign"}, {"slug": "wilcoxon", "name": "Wilcoxon Signed-Rank Test", "block": "One group, pre–post", "scale": "Ordinal / interval", "samples": "Paired", "min": "6 non-zero pairs", "desc": "Tests a paired shift while taking both direction and magnitude of change into account.", "type": "paired", "calc": "wilcoxon"}, {"slug": "paired-t", "name": "Paired t-test", "block": "One group, pre–post", "scale": "Interval", "samples": "Paired", "min": "7 pairs; preferably ≥30", "desc": "Compares the mean pre–post difference. The differences should be approximately normally distributed.", "type": "paired", "calc": "pairedT"}, {"slug": "mcnemar", "name": "McNemar Exact Test", "block": "One group, pre–post", "scale": "Binary nominal", "samples": "Paired", "min": "6 discordant pairs", "desc": "Tests whether the proportion of a binary outcome changes between two paired measurements.", "type": "binarypaired", "calc": "mcnemar"}, {"slug": "hake-g", "name": "Normalized Gain (Hake g)", "block": "One group, pre–post", "scale": "Scores expressed as %", "samples": "Paired / aggregate", "min": "Any n", "desc": "Describes the proportion of the available improvement that was achieved. It is an effect indicator, not a significance test.", "type": "hake", "calc": "hake"}, {"slug": "bespalko", "name": "Bespalko Mastery Coefficient (Ka)", "block": "Criterion-referenced outcome", "scale": "Proportion", "samples": "Individual / group", "min": "Any n", "desc": "Describes mastery as the proportion of essential operations completed correctly; Ka ≥ 0.70 is treated as a mastery threshold in the supplied methodological framework.", "type": "bespalko", "calc": "bespalko"}, {"slug": "friedman", "name": "Friedman Test", "block": "One group, 3+ measurements", "scale": "Ordinal / interval", "samples": "Repeated measures", "min": "5 complete cases", "desc": "Tests whether three or more related measurements differ. A significant result requires follow-up paired comparisons.", "type": "matrix", "calc": "friedman"}, {"slug": "mann-whitney", "name": "Mann–Whitney U Test", "block": "Two independent groups", "scale": "Ordinal / interval", "samples": "Independent", "min": "About 4 per group", "desc": "Compares the distributions/ranks of two independent groups without assuming normality.", "type": "twoGroups", "calc": "mannWhitney"}, {"slug": "independent-t", "name": "Independent Samples t-test (Welch)", "block": "Two independent groups", "scale": "Interval", "samples": "Independent", "min": "Preferably ≥15 per group", "desc": "Compares group means. Welch’s version is used by default because it does not require equal variances.", "type": "twoGroups", "calc": "independentT"}, {"slug": "fisher-exact", "name": "Fisher’s Exact Test (2×2)", "block": "Two independent groups", "scale": "Binary nominal", "samples": "Independent", "min": "Works with very small counts", "desc": "Tests association/difference between two binary proportions using an exact 2×2 calculation.", "type": "fisher", "calc": "fisher"}, {"slug": "chi-square", "name": "Pearson Chi-Square Test", "block": "Independent categorical data", "scale": "Nominal / grouped ordinal", "samples": "Independent", "min": "Expected counts should generally be ≥5", "desc": "Tests whether two categorical variables are associated or whether categorical distributions differ.", "type": "matrixCounts", "calc": "chiSquare"}, {"slug": "spearman", "name": "Spearman Rank Correlation", "block": "Relationship between indicators", "scale": "Ordinal / interval", "samples": "Paired observations", "min": "5 pairs; preferably ≥30", "desc": "Measures a monotonic association without requiring normality or linearity.", "type": "pairedXY", "calc": "spearman"}, {"slug": "pearson", "name": "Pearson Correlation", "block": "Relationship between indicators", "scale": "Interval", "samples": "Paired observations", "min": "Preferably ≥30", "desc": "Measures linear association between two quantitative variables. It is sensitive to outliers.", "type": "pairedXY", "calc": "pearson"}, {"slug": "cronbach-alpha", "name": "Cronbach’s Alpha", "block": "Measurement quality", "scale": "Item scores", "samples": "Pilot sample", "min": "20 respondents, preferably ≥30", "desc": "Estimates internal consistency of a multi-item test or scale. It should be checked before the main study.", "type": "matrixItems", "calc": "cronbach"}, {"slug": "cohen-kappa", "name": "Cohen’s Kappa", "block": "Measurement quality", "scale": "Nominal ratings", "samples": "Two raters", "min": "About 20 rated objects", "desc": "Measures agreement between two raters beyond chance agreement.", "type": "labelsTwo", "calc": "kappa"}, {"slug": "kendall-w", "name": "Kendall’s W", "block": "Measurement quality", "scale": "Ranks", "samples": "Three or more raters", "min": "3 raters × about 7 objects", "desc": "Measures concordance among three or more experts who rank the same objects.", "type": "matrixRanks", "calc": "kendallW"}, {"slug": "one-way-anova", "name": "One-Way ANOVA", "block": "Three or more independent groups", "scale": "Interval", "samples": "Independent", "min": "Preferably ≥15 per group", "desc": "Tests whether at least one group mean differs across three or more independent groups.", "type": "multiGroups", "calc": "anova"}];
+
+const METHOD_RULES = {
+  "sign-test":{recommended:5, preferred:12, note:"Exact and robust for direction of paired change, but ignores change magnitude."},
+  "wilcoxon":{recommended:6, preferred:15, note:"Suitable for paired ordinal/non-normal quantitative data."},
+  "paired-t":{recommended:8, preferred:30, note:"Small samples require a defensible normality assumption for the paired differences."},
+  "mcnemar":{recommended:6, preferred:20, note:"Power is driven by the number of discordant pairs, not simply total N."},
+  "hake-g":{recommended:1, preferred:20, note:"Descriptive learning-gain index; no significance test."},
+  "bespalko":{recommended:1, preferred:20, note:"Criterion-referenced threshold; no significance test."},
+  "friedman":{recommended:5, preferred:15, note:"Repeated-measures omnibus test; post-hoc comparisons are needed if significant."},
+  "mann-whitney":{recommended:4, preferred:15, note:"Can be used with small independent groups, but very small N limits power."},
+  "independent-t":{recommended:6, preferred:20, note:"Welch's test is robust to unequal variances; normality matters more at small N."},
+  "fisher-exact":{recommended:4, preferred:15, note:"Exact 2×2 method and therefore appropriate when expected counts are small."},
+  "chi-square":{recommended:20, preferred:30, note:"What matters is expected cell frequency; sparse tables should use exact methods."},
+  "spearman":{recommended:5, preferred:20, note:"Works with ranks and monotonic associations; small N gives wide uncertainty."},
+  "pearson":{recommended:8, preferred:30, note:"Check linearity and outliers; correlation estimates are unstable in small samples."},
+  "cronbach-alpha":{recommended:20, preferred:30, note:"Pilot reliability estimates are unstable in very small samples."},
+  "cohen-kappa":{recommended:20, preferred:30, note:"Agreement estimates and CIs are unstable with few rated objects."},
+  "kendall-w":{recommended:7, preferred:15, note:"Requires at least three raters; more objects give a more stable concordance estimate."},
+  "one-way-anova":{recommended:15, preferred:25, note:"Recommendation refers roughly to observations per group; check residual assumptions."}
+};
+
+function byId(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function selected(id){return byId(id)?.value || ""}
+
+function inferDesignQuestions(){
+  const objective=selected("objective");
+  const design=byId("design");
+  if(!design) return;
+  const all=[...design.options];
+  all.forEach(o=>o.hidden=false);
+  if(objective==="quality"){
+    all.forEach(o=>o.hidden=!["","items","twoRaters","multiRaters"].includes(o.value));
+  }else if(objective==="association"){
+    all.forEach(o=>o.hidden=!["","independent2","items"].includes(o.value));
+  }else if(objective==="mastery"){
+    all.forEach(o=>o.hidden=!["","paired2"].includes(o.value));
+  }else{
+    all.forEach(o=>o.hidden=false);
+  }
+  if(design.selectedOptions[0]?.hidden) design.value="";
+}
+
+function sampleDiagnostic(slug,n,design){
+  const r=METHOD_RULES[slug];
+  if(!r || !n) return {cls:"",text:"Enter an approximate sample size to receive a sample-size diagnostic."};
+  let effectiveN=n;
+  if(slug==="one-way-anova" && design==="independent3") effectiveN=n;
+  if(effectiveN<r.recommended) return {cls:"bad",text:`N = ${n} is below the teaching-site minimum for this method. Consider redesigning the study, collecting more observations, or choosing an exact/nonparametric alternative if appropriate. ${r.note}`};
+  if(effectiveN<r.preferred) return {cls:"warn",text:`N = ${n} is usable with caution, but the result may have low power or wide confidence intervals. ${r.note}`};
+  return {cls:"ok",text:`N = ${n} is not automatically problematic for this method. Assumptions, effect size, missing data and design quality still need to be checked. ${r.note}`};
+}
+
+function recommend(){
+  inferDesignQuestions();
+  const objective=selected("objective"), scale=selected("scale"), design=selected("design");
+  const normal=selected("normality"), n=Number(selected("sampleSize")||0);
+  let slugs=[], rationale=[];
+  if(objective==="change"){
+    rationale.push("You are testing change or a difference in an outcome.");
+    if(design==="paired2"){
+      rationale.push("The observations are paired because the same participants are measured twice.");
+      if(scale==="binary") slugs=["mcnemar"];
+      else if(scale==="percent") slugs=["wilcoxon","paired-t","hake-g"];
+      else if(scale==="ordinal") slugs=["wilcoxon","sign-test"];
+      else if(scale==="interval") slugs=normal==="yes"?["paired-t","wilcoxon"]:["wilcoxon","paired-t","sign-test"];
+    } else if(design==="repeated3"){
+      rationale.push("Three or more measurements are repeated on the same participants.");
+      if(["ordinal","interval"].includes(scale)) slugs=["friedman"];
+    } else if(design==="independent2"){
+      rationale.push("The two groups contain different participants.");
+      if(scale==="binary") slugs=["fisher-exact","chi-square"];
+      else if(scale==="ordinal") slugs=["mann-whitney"];
+      else if(scale==="interval") slugs=normal==="yes"?["independent-t","mann-whitney"]:["mann-whitney","independent-t"];
+    } else if(design==="independent3"){
+      rationale.push("Three or more independent groups are compared.");
+      if(scale==="interval") slugs=["one-way-anova"];
+      else if(["nominal","binary","ordinal"].includes(scale)) slugs=["chi-square"];
+    }
+  } else if(objective==="association"){
+    rationale.push("You are examining association rather than pre–post effectiveness.");
+    if(["nominal","binary"].includes(scale)) slugs=["chi-square","fisher-exact"];
+    else if(scale==="ordinal") slugs=["spearman"];
+    else if(scale==="interval") slugs=normal==="yes"?["pearson","spearman"]:["spearman","pearson"];
+  } else if(objective==="quality"){
+    rationale.push("Instrument/rater quality should be checked before using the scores as evidence of effectiveness.");
+    if(design==="items") slugs=["cronbach-alpha"];
+    else if(design==="twoRaters") slugs=["cohen-kappa"];
+    else if(design==="multiRaters") slugs=["kendall-w"];
+  } else if(objective==="mastery"){
+    rationale.push("You are evaluating criterion attainment or the magnitude of learning gain.");
+    slugs=["bespalko","hake-g"];
+  }
+
+  renderSummary(objective,scale,design,normal,n,rationale);
+  renderRecs(slugs,n,design);
+  updateProgress();
+}
+function renderSummary(objective,scale,design,normal,n,rationale){
+  const box=byId("selectorSummary");
+  if(!box) return;
+  const label=id=>byId(id)?.selectedOptions[0]?.text || "Not selected";
+  box.innerHTML=`<div class="selector-summary">
+    <div class="metric">Research aim<b>${esc(label("objective"))}</b></div>
+    <div class="metric">Scale<b>${esc(label("scale"))}</b></div>
+    <div class="metric">Design<b>${esc(label("design"))}</b></div>
+    <div class="metric">Approximate N<b>${n||"Not entered"}</b></div>
+  </div><div class="note blue"><b>Decision logic:</b> ${esc(rationale.join(" ")) || "Complete the questions to generate the logic."}</div>`;
+}
+function renderRecs(slugs,n,design){
+  const box=byId("recommendations");
+  if(!slugs.length){
+    box.innerHTML='<div class="note">No calculator in this static version fits all selected conditions. Recheck the research aim, scale and design. A statistical method should not be chosen solely because it returns a significant result.</div>';return;
+  }
+  box.innerHTML=slugs.map((slug,idx)=>{
+    const m=METHODS.find(x=>x.slug===slug),d=sampleDiagnostic(slug,n,design);
+    return `<div class="rec"><div><h3>${idx===0?"Primary recommendation: ":"Alternative: "}${esc(m.name)}</h3><div class="muted">${esc(m.desc)}</div><div class="badges"><span class="badge">${esc(m.scale)}</span><span class="badge">${esc(m.samples)}</span></div><div class="diagnostic ${d.cls}"><b>Sample-size check:</b> ${esc(d.text)}</div></div><a class="btn primary" href="methods/${m.slug}.html">Open calculator →</a></div>`
+  }).join("");
+}
+function updateProgress(){
+  const vals=["objective","scale","design","sampleSize"].map(id=>byId(id)?.value);
+  const done=vals.filter(Boolean).length;
+  document.querySelectorAll(".tree-dot").forEach((el,i)=>el.classList.toggle("active",i<done));
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("change",recommend));
+  document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("input",recommend));
+  byId("recommendBtn")?.addEventListener("click",recommend);
+  updateProgress();
+});

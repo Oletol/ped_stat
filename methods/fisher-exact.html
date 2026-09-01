@@ -1,0 +1,29 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fisher’s Exact Test (2×2) | Pedagogical Statistics Lab</title><link rel="stylesheet" href="../assets/css/style.css"></head>
+<body data-calc="fisher">
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark">Σ</span><span>Pedagogical Statistics Lab</span></a>
+    <div class="nav-links">
+      <a href="../index.html">Method selector</a>
+      <a href="../methods.html">All methods</a>
+      <a href="../guide.html">Study design guide</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero"><span class="eyebrow">Two independent groups</span><h1>Fisher’s Exact Test (2×2)</h1><p>Tests association/difference between two binary proportions using an exact 2×2 calculation.</p></section>
+<main class="shell"><div class="method-layout">
+<section class="card"><div class="kicker">Data entry</div><h2>Calculate the result</h2><div class="table-wrap"><table><thead><tr><th></th><th>Outcome = 1</th><th>Outcome = 0</th></tr></thead><tbody><tr><th>Group 1</th><td><input id="c11" type="number" min="0" step="1" value="8"></td><td><input id="c12" type="number" min="0" step="1" value="2"></td></tr><tr><th>Group 2</th><td><input id="c21" type="number" min="0" step="1" value="3"></td><td><input id="c22" type="number" min="0" step="1" value="7"></td></tr></tbody></table></div>
+<div class="actions"><button id="calculateBtn" class="btn primary">Calculate</button><a class="btn ghost" href="../index.html">Back to selector</a></div>
+<div id="result" class="result"><h3>Result</h3><div class="muted">Enter your data and select Calculate.</div></div></section>
+<aside class="card"><div class="kicker">Method note</div><h2>When to use it</h2>
+<div class="badges"><span class="badge">Binary nominal</span><span class="badge">Independent</span><span class="badge">Minimum: Works with very small counts</span></div>
+<p class="muted">Tests association/difference between two binary proportions using an exact 2×2 calculation.</p><div class="note blue"><b>Conditions and limits:</b><br>Use absolute counts in a 2×2 table. The odds ratio can be infinite when one cell is zero.</div>
+<hr class="soft"><h3>How to interpret “effective”</h3><p class="muted">Treat the calculator output as evidence about a statistical pattern. A statistically significant result is not automatically proof that a teaching method is effective. Causal interpretation depends on the research design, baseline comparability, attrition, measurement reliability and alternative explanations.</p>
+</aside></div></main>
+<footer class="footer">
+  Educational decision-support tool for pedagogical research. Calculators are designed for teaching and preliminary analysis. For thesis publication or high-stakes reporting, verify assumptions and reproduce final analyses in a validated statistical package.
+</footer>
+
+<script src="../assets/js/stats.js"></script><script src="../assets/js/method-engine.js"></script></body></html>
