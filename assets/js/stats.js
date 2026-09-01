@@ -172,8 +172,8 @@ const Stats = (() => {
   function parseLabels(text){
     return text.trim().split(/\n+/).map(x=>x.trim()).filter(Boolean);
   }
-  function fmt(x,d=4){ return Number.isFinite(x)?Number(x).toFixed(d):"—"; }
-  function pFmt(p){ if(!Number.isFinite(p))return "—"; if(p<.0001)return "< 0.0001"; return p.toFixed(4); }
+  function fmt(x,d=4){ return Number.isFinite(x)?Number(x).toFixed(d):"–"; }
+  function pFmt(p){ if(!Number.isFinite(p))return "–"; if(p<.0001)return "< 0.0001"; return p.toFixed(4); }
 
   function pairedT(a,b){
     const d=a.map((x,i)=>b[i]-x), n=d.length, md=mean(d), s=sd(d);

@@ -1,52 +1,76 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pedagogical Statistics Lab</title><link rel="stylesheet" href="assets/css/style.css"></head>
-<body><header class="site-header">
+<title>Statistical Method Selector</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body data-title-en="Statistical Method Selector" data-title-ru="Выбор статистического метода"><header class="site-header">
   <nav class="nav">
     <a class="brand" href="index.html"><span class="brand-mark">Σ</span><span>Pedagogical Statistics Lab</span></a>
-    <div class="nav-links">
-      <a href="index.html">Method selector</a>
-      <a href="methods.html">All methods</a>
-      <a href="guide.html">Study design guide</a>
-    </div>
+    <div class="nav-links"><a href="index.html">Method selector</a><a href="methods.html">All methods</a><a href="guide.html">Study design guide</a></div>
   </nav>
 </header>
-<section class="hero"><span class="eyebrow">Research design → statistical method</span><h1>Build the analysis from the research question—not from the p-value.</h1>
-<p>This decision tree checks the research aim, scale, study design, distributional assumptions and approximate sample size. It then recommends methods that can be run completely in the browser.</p></section>
+<section class="hero compact"><h1 data-en="Statistical Method Selector" data-ru="Выбор статистического метода">Statistical Method Selector</h1></section>
 <main class="shell">
 <div class="grid two">
 <section class="card">
-  <div class="tree-progress"><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span></div>
-  <h2>Statistical decision tree</h2>
-  <div class="tree-question"><h3>Step 1. What claim are you trying to support?</h3>
-    <select id="objective" data-recommend><option value="">Select…</option><option value="change">A learning outcome changed / groups differ</option><option value="association">Two indicators are related</option><option value="quality">A test, scale or expert rating is reliable enough to use</option><option value="mastery">A predefined mastery threshold or learning-gain level was reached</option></select>
-    <div class="why">Why this matters: a correlation question, a pre–post question and an instrument-quality question require different statistics.</div></div>
-  <div class="tree-question"><h3>Step 2. What kind of data represent the outcome?</h3>
-    <select id="scale" data-recommend><option value="">Select…</option><option value="binary">Binary nominal (pass/fail, yes/no)</option><option value="nominal">Nominal categories</option><option value="ordinal">Ordinal levels / ranks / rubric categories</option><option value="interval">Quantitative scores treated as interval</option><option value="percent">Pre/post percentage scores</option></select>
-    <div class="why">Why this matters: rank-based and categorical tests do not make the same assumptions as mean-based parametric tests.</div></div>
-  <div class="tree-question"><h3>Step 3. How were observations collected?</h3>
-    <select id="design" data-recommend><option value="">Select…</option><option value="paired2">One group, two paired measurements (pre–post)</option><option value="repeated3">One group, three or more repeated measurements</option><option value="independent2">Two independent groups</option><option value="independent3">Three or more independent groups</option><option value="items">Multi-item test / questionnaire pilot</option><option value="twoRaters">Two expert raters</option><option value="multiRaters">Three or more expert raters</option></select>
-    <div class="why">Why this matters: paired data must remain paired. Treating repeated observations as independent produces invalid standard errors.</div></div>
-  <div class="tree-question"><h3>Step 4. Are parametric assumptions defensible?</h3>
-    <select id="normality" data-recommend><option value="">Unknown / not applicable</option><option value="yes">Yes, approximately</option><option value="no">No / doubtful / strong outliers</option></select>
-    <div class="why">For a paired t-test, inspect the distribution of the paired differences rather than the two score distributions separately.</div></div>
-  <div class="tree-question"><h3>Step 5. Approximate sample size</h3><input id="sampleSize" data-recommend type="number" min="1" placeholder="e.g. 24">
-    <div class="why">The site flags very small samples. A non-significant result with low N should not be rewritten as “there is no effect”.</div></div>
-  <button class="btn primary" id="recommendBtn">Generate recommendation</button>
+  <div class="tree-progress"><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span><span class="tree-dot"></span></div>
+  <h2 data-en="Study parameters" data-ru="Параметры исследования">Study parameters</h2>
+  <div class="tree-question"><h3 data-en="Step 1. Research purpose" data-ru="Шаг 1. Цель исследования">Step 1. Research purpose</h3>
+    <select id="objective" data-recommend>
+      <option value="" data-en="Select a purpose" data-ru="Выберите цель">Select a purpose</option>
+      <option value="change" data-en="Compare outcomes or groups" data-ru="Сравнить результаты или группы">Compare outcomes or groups</option>
+      <option value="association" data-en="Assess a relationship" data-ru="Оценить связь показателей">Assess a relationship</option>
+      <option value="quality" data-en="Check measurement quality" data-ru="Проверить качество измерения">Check measurement quality</option>
+      <option value="mastery" data-en="Assess mastery or learning gain" data-ru="Оценить освоение или учебный прирост">Assess mastery or learning gain</option>
+    </select>
+    <p id="objectiveHelp" class="choice-help" data-en="Choose the statement that best matches the main research question." data-ru="Выберите вариант, который точнее всего соответствует главному исследовательскому вопросу.">Choose the statement that best matches the main research question.</p>
+  </div>
+  <div class="tree-question"><h3 data-en="Step 2. Outcome data" data-ru="Шаг 2. Данные результата">Step 2. Outcome data</h3>
+    <select id="scale" data-recommend>
+      <option value="" data-en="Select a data type" data-ru="Выберите тип данных">Select a data type</option>
+      <option value="binary" data-en="Two categories" data-ru="Две категории">Two categories</option>
+      <option value="nominal" data-en="Nominal categories" data-ru="Номинальные категории">Nominal categories</option>
+      <option value="ordinal" data-en="Ordered categories or ranks" data-ru="Упорядоченные категории или ранги">Ordered categories or ranks</option>
+      <option value="interval" data-en="Quantitative scores" data-ru="Количественные баллы">Quantitative scores</option>
+      <option value="percent" data-en="Percentage scores before and after" data-ru="Процентные результаты до и после">Percentage scores before and after</option>
+    </select>
+    <p id="scaleHelp" class="choice-help" data-en="Select the form in which the outcome is recorded." data-ru="Выберите форму, в которой записан результат.">Select the form in which the outcome is recorded.</p>
+  </div>
+  <div class="tree-question"><h3 data-en="Step 3. Study design" data-ru="Шаг 3. Дизайн исследования">Step 3. Study design</h3>
+    <select id="design" data-recommend>
+      <option value="" data-en="Select a design" data-ru="Выберите дизайн">Select a design</option>
+      <option value="paired2" data-en="One group measured twice" data-ru="Одна группа, два измерения">One group measured twice</option>
+      <option value="repeated3" data-en="One group measured three times or more" data-ru="Одна группа, три измерения и более">One group measured three times or more</option>
+      <option value="independent2" data-en="Two independent groups" data-ru="Две независимые группы">Two independent groups</option>
+      <option value="independent3" data-en="Three independent groups or more" data-ru="Три независимые группы и более">Three independent groups or more</option>
+      <option value="items" data-en="Multi-item test or questionnaire" data-ru="Тест или анкета из нескольких пунктов">Multi-item test or questionnaire</option>
+      <option value="twoRaters" data-en="Two expert raters" data-ru="Два эксперта">Two expert raters</option>
+      <option value="multiRaters" data-en="Three expert raters or more" data-ru="Три эксперта и более">Three expert raters or more</option>
+    </select>
+    <p id="designHelp" class="choice-help" data-en="Specify whether observations come from the same people, different groups, questionnaire items or expert ratings." data-ru="Укажите, относятся ли наблюдения к одним и тем же учащимся, разным группам, пунктам анкеты или экспертным оценкам.">Specify whether observations come from the same people, different groups, questionnaire items or expert ratings.</p>
+  </div>
+  <div class="tree-question"><h3 data-en="Step 4. Distribution and outliers" data-ru="Шаг 4. Распределение и выбросы">Step 4. Distribution and outliers</h3>
+    <select id="normality" data-recommend>
+      <option value="" data-en="Unknown or not applicable" data-ru="Неизвестно или неприменимо">Unknown or not applicable</option>
+      <option value="yes" data-en="Approximately normal without strong outliers" data-ru="Примерно нормальное, без сильных выбросов">Approximately normal without strong outliers</option>
+      <option value="no" data-en="Non-normal, doubtful or with strong outliers" data-ru="Ненормальное, сомнительное или с сильными выбросами">Non-normal, doubtful or with strong outliers</option>
+    </select>
+    <p id="normalityHelp" class="choice-help" data-en="For paired data, assess the differences between measurements. If unsure, select the first option." data-ru="Для связанных данных оценивайте разности между измерениями. Если вы не уверены, выберите первый вариант.">For paired data, assess the differences between measurements. If unsure, select the first option.</p>
+  </div>
+  <div class="tree-question"><h3 data-en="Step 5. Sample size" data-ru="Шаг 5. Размер выборки">Step 5. Sample size</h3>
+    <input id="sampleSize" data-recommend type="number" min="1" data-placeholder-en="For example, 24" data-placeholder-ru="Например, 24" placeholder="For example, 24">
+    <p id="sampleHelp" class="choice-help" data-en="Enter the number of usable learners in a paired study. For independent groups, enter the size of the smallest group. For a questionnaire, enter respondents; for expert agreement, enter rated objects." data-ru="Для связанного исследования укажите число учащихся с полными данными. Для независимых групп укажите размер наименьшей группы. Для анкеты укажите число респондентов, для согласия экспертов – число оценённых объектов.">Enter the number of usable learners in a paired study. For independent groups, enter the size of the smallest group. For a questionnaire, enter respondents; for expert agreement, enter rated objects.</p>
+  </div>
+  <button class="btn primary" id="recommendBtn" data-en="Show methods" data-ru="Показать методы">Show methods</button>
 </section>
-<aside class="card">
-  <h2>What can a statistical test establish?</h2>
-  <div class="note blue"><b>Difference ≠ effectiveness.</b><br>A significant result can support a claim that scores changed or groups differed. To attribute that difference to the teaching method, the design must address competing explanations.</div>
-  <hr class="soft">
-  <h3>Stronger causal evidence usually requires</h3>
-  <p class="muted">A comparison/control condition, baseline measurement, comparable groups or randomization where feasible, valid and reliable outcome measures, transparent handling of attrition and missing data, and an a priori analysis plan.</p>
-  <h3>Minimum reporting set</h3>
-  <p class="muted">N, descriptive statistics, test statistic, degrees of freedom where applicable, p-value, 95% confidence interval when estimable, effect size, assumptions/limitations, and a restrained interpretation.</p>
+<aside class="card guidance-card">
+  <h2 data-en="Interpreting evidence" data-ru="Интерпретация данных">Interpreting evidence</h2>
+  <div class="note blue"><b data-en="A difference is not automatically an effect of the method." data-ru="Различие не всегда вызвано методикой.">A difference is not automatically an effect of the method.</b><br><span data-en="A statistical test can show a change, difference or association. Attribution to teaching also depends on the study design." data-ru="Статистический тест может показать изменение, различие или связь. Связь результата с обучением также зависит от дизайна исследования.">A statistical test can show a change, difference or association. Attribution to teaching also depends on the study design.</span></div>
+  <h3 data-en="For a stronger conclusion" data-ru="Для более обоснованного вывода">For a stronger conclusion</h3>
+  <p class="muted" data-en="Use a comparison group where possible, measure the baseline, document group formation and attrition, and use reliable outcome measures." data-ru="По возможности используйте контрольную группу, проведите исходное измерение, опишите формирование групп и выбывание участников, применяйте надёжные показатели результата.">Use a comparison group where possible, measure the baseline, document group formation and attrition, and use reliable outcome measures.</p>
+  <h3 data-en="Report at least" data-ru="В отчёте укажите">Report at least</h3>
+  <p class="muted" data-en="Sample size, descriptive statistics, test statistic, p-value, confidence interval when available, effect size, assumptions and limitations." data-ru="Размер выборки, описательную статистику, значение критерия, p-значение, доверительный интервал при наличии, размер эффекта, предпосылки и ограничения.">Sample size, descriptive statistics, test statistic, p-value, confidence interval when available, effect size, assumptions and limitations.</p>
 </aside>
 </div>
-<section class="card" style="margin-top:20px"><h2>Your research logic</h2><div id="selectorSummary" class="muted">Complete the decision tree to generate a methodological rationale.</div></section>
-<section class="card" style="margin-top:20px"><h2>Recommended calculators</h2><div id="recommendations" class="recommendations"><div class="muted">Complete the decision tree to see recommendations.</div></div></section>
-</main><footer class="footer">
-  Educational decision-support tool for pedagogical research. Calculators are designed for teaching and preliminary analysis. For thesis publication or high-stakes reporting, verify assumptions and reproduce final analyses in a validated statistical package.
-</footer>
-<script src="assets/js/stats.js"></script><script src="assets/js/app.js"></script></body></html>
+<section class="card section-gap"><h2 data-en="Selection summary" data-ru="Итоги выбора">Selection summary</h2><div id="selectorSummary" class="muted" data-en="Complete the form to see the selection logic." data-ru="Заполните форму, чтобы увидеть логику выбора.">Complete the form to see the selection logic.</div></section>
+<section class="card section-gap"><h2 data-en="Recommended methods" data-ru="Рекомендуемые методы">Recommended methods</h2><div id="recommendations" class="recommendations"><div class="muted" data-en="Complete the form to see recommendations." data-ru="Заполните форму, чтобы увидеть рекомендации.">Complete the form to see recommendations.</div></div></section>
+</main><footer class="footer"></footer>
+<script src="assets/js/stats.js"></script><script src="assets/js/site.js"></script><script src="assets/js/app.js"></script></body></html>

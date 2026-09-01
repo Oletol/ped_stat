@@ -24,6 +24,47 @@ const METHOD_RULES = {
 function byId(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function selected(id){return byId(id)?.value || ""}
+function tt(en,ru){return window.Lang?.text(en,ru)||en}
+
+const CHOICE_HELP={
+  objective:{
+    "": ["Choose the statement that best matches the main research question.","Выберите вариант, который точнее всего соответствует главному исследовательскому вопросу."],
+    change:["Use this when you want to determine whether the same learners changed over time or whether separate groups have different scores, ranks or success rates.","Выберите этот вариант, если нужно определить, изменились ли результаты одних и тех же учащихся или различаются ли баллы, ранги либо доли успеха в разных группах."],
+    association:["Use this when each participant or object has two indicators and you want to know whether their values tend to vary together. Association does not establish causation.","Выберите этот вариант, если для каждого участника или объекта есть два показателя и нужно определить, изменяются ли они согласованно. Связь не доказывает причинность."],
+    quality:["Use this to evaluate whether items in a test work consistently or whether experts give sufficiently similar ratings. This assesses the measurement tool, not learning progress.","Выберите этот вариант, чтобы оценить согласованность заданий теста или оценок экспертов. Здесь оценивается качество измерения, а не учебный прогресс."],
+    mastery:["Use this when the result is compared with a predefined mastery threshold or when improvement is expressed as the proportion of the maximum possible gain.","Выберите этот вариант, если результат сравнивается с заранее заданным порогом освоения или прирост выражается как доля максимально возможного улучшения."]
+  },
+  scale:{
+    "":["Select the form in which the outcome is recorded.","Выберите форму, в которой записан результат."],
+    binary:["Exactly two categories, such as pass and fail, yes and no, or correct and incorrect.","Ровно две категории, например зачёт и незачёт, да и нет, правильно и неправильно."],
+    nominal:["Three categories or more with no natural order, such as programme type, error type or preferred activity.","Три категории или более без естественного порядка, например тип программы, вид ошибки или предпочитаемая активность."],
+    ordinal:["Categories have an order, but distances between levels are not assumed equal, such as low, medium and high, rubric levels or ranks.","Категории упорядочены, но расстояния между уровнями нельзя считать равными, например низкий, средний и высокий уровень, уровни рубрики или ранги."],
+    interval:["Numerical scores for which differences are meaningful, such as test points, time, accuracy or a scale total treated as quantitative.","Числовые показатели, для которых разности имеют смысл, например тестовые баллы, время, точность или суммарный балл шкалы."],
+    percent:["Scores from 0 to 100 recorded before and after learning. This option supports normalized gain calculations.","Результаты от 0 до 100, полученные до и после обучения. Этот вариант позволяет рассчитать нормализованный прирост."]
+  },
+  design:{
+    "":["Specify where the observations come from.","Укажите, откуда получены наблюдения."],
+    paired2:["The same learners provide two values, usually before and after instruction. Only learners with both values count toward N.","Одни и те же учащиеся имеют два результата, обычно до и после обучения. В N учитываются только учащиеся с обоими результатами."],
+    repeated3:["The same learners are measured on three occasions or more. Each row of data represents one learner.","Одни и те же учащиеся проходят три измерения или более. Каждая строка данных соответствует одному учащемуся."],
+    independent2:["The groups contain different learners. No learner belongs to both groups.","Группы состоят из разных учащихся. Один учащийся не должен входить в обе группы."],
+    independent3:["Three separate groups or more are compared. Enter the size of the smallest group in Step 5.","Сравниваются три отдельные группы или более. На шаге 5 укажите размер наименьшей группы."],
+    items:["Each respondent answers several test items or questionnaire statements. Rows are respondents and columns are items.","Каждый респондент выполняет несколько заданий теста или отвечает на несколько пунктов анкеты. Строки – респонденты, столбцы – пункты."],
+    twoRaters:["Two experts independently assign categories to the same learners, responses or products.","Два эксперта независимо присваивают категории одним и тем же учащимся, ответам или работам."],
+    multiRaters:["Three experts or more rank the same set of objects using one shared criterion.","Три эксперта или более ранжируют один и тот же набор объектов по общему критерию."]
+  },
+  normality:{
+    "":["Choose this when normality has not been assessed or is irrelevant for categorical data.","Выберите этот вариант, если нормальность не проверялась или неприменима к категориальным данным."],
+    yes:["Use this only when the relevant values are reasonably symmetric and do not contain strong outliers. For paired tests, assess the differences.","Выберите этот вариант, если соответствующие значения достаточно симметричны и не содержат сильных выбросов. Для связанных тестов оценивайте разности."],
+    no:["Use this for clearly skewed data, strong outliers, doubtful assumptions or small samples without evidence of normality.","Выберите этот вариант при выраженной асимметрии, сильных выбросах, сомнительных предпосылках или малой выборке без подтверждения нормальности."]
+  }
+};
+
+function updateChoiceHelp(){
+  ["objective","scale","design","normality"].forEach(id=>{
+    const pair=CHOICE_HELP[id][selected(id)]||CHOICE_HELP[id][""];
+    const el=byId(id+"Help");if(el)el.textContent=tt(pair[0],pair[1]);
+  });
+}
 
 function inferDesignQuestions(){
   const objective=selected("objective");
@@ -45,12 +86,12 @@ function inferDesignQuestions(){
 
 function sampleDiagnostic(slug,n,design){
   const r=METHOD_RULES[slug];
-  if(!r || !n) return {cls:"",text:"Enter an approximate sample size to receive a sample-size diagnostic."};
+  if(!r || !n) return {cls:"",text:tt("Enter the sample size to check whether the estimate may be unstable.","Укажите размер выборки, чтобы проверить возможную нестабильность оценки.")};
   let effectiveN=n;
   if(slug==="one-way-anova" && design==="independent3") effectiveN=n;
-  if(effectiveN<r.recommended) return {cls:"bad",text:`N = ${n} is below the teaching-site minimum for this method. Consider redesigning the study, collecting more observations, or choosing an exact/nonparametric alternative if appropriate. ${r.note}`};
-  if(effectiveN<r.preferred) return {cls:"warn",text:`N = ${n} is usable with caution, but the result may have low power or wide confidence intervals. ${r.note}`};
-  return {cls:"ok",text:`N = ${n} is not automatically problematic for this method. Assumptions, effect size, missing data and design quality still need to be checked. ${r.note}`};
+  if(effectiveN<r.recommended) return {cls:"bad",text:tt(`N = ${n} is below the minimum used by this teaching tool. Collect more observations or consider an exact or nonparametric alternative when appropriate.`, `N = ${n} меньше минимума, принятого в этом учебном инструменте. Увеличьте выборку или при необходимости рассмотрите точный либо непараметрический метод.`)};
+  if(effectiveN<r.preferred) return {cls:"warn",text:tt(`N = ${n} can be analysed with caution, but statistical power may be low and confidence intervals may be wide.`, `N = ${n} можно анализировать с осторожностью, однако статистическая мощность может быть низкой, а доверительные интервалы – широкими.`)};
+  return {cls:"ok",text:tt(`N = ${n} is not automatically problematic. Assumptions, missing data and study quality still require review.`, `N = ${n} само по себе не вызывает явной проблемы. Необходимо также проверить предпосылки, пропущенные данные и качество исследования.`)};
 }
 
 function recommend(){
@@ -59,38 +100,38 @@ function recommend(){
   const normal=selected("normality"), n=Number(selected("sampleSize")||0);
   let slugs=[], rationale=[];
   if(objective==="change"){
-    rationale.push("You are testing change or a difference in an outcome.");
+    rationale.push(tt("The aim is to compare outcomes.","Цель – сравнить результаты."));
     if(design==="paired2"){
-      rationale.push("The observations are paired because the same participants are measured twice.");
+      rationale.push(tt("The same participants are measured twice, so the observations are paired.","Одни и те же участники измеряются дважды, поэтому наблюдения являются связанными."));
       if(scale==="binary") slugs=["mcnemar"];
       else if(scale==="percent") slugs=["wilcoxon","paired-t","hake-g"];
       else if(scale==="ordinal") slugs=["wilcoxon","sign-test"];
       else if(scale==="interval") slugs=normal==="yes"?["paired-t","wilcoxon"]:["wilcoxon","paired-t","sign-test"];
     } else if(design==="repeated3"){
-      rationale.push("Three or more measurements are repeated on the same participants.");
+      rationale.push(tt("The same participants provide three measurements or more.","Одни и те же участники имеют три измерения или более."));
       if(["ordinal","interval"].includes(scale)) slugs=["friedman"];
     } else if(design==="independent2"){
-      rationale.push("The two groups contain different participants.");
+      rationale.push(tt("The groups contain different participants.","Группы состоят из разных участников."));
       if(scale==="binary") slugs=["fisher-exact","chi-square"];
       else if(scale==="ordinal") slugs=["mann-whitney"];
       else if(scale==="interval") slugs=normal==="yes"?["independent-t","mann-whitney"]:["mann-whitney","independent-t"];
     } else if(design==="independent3"){
-      rationale.push("Three or more independent groups are compared.");
+      rationale.push(tt("Three independent groups or more are compared.","Сравниваются три независимые группы или более."));
       if(scale==="interval") slugs=["one-way-anova"];
       else if(["nominal","binary","ordinal"].includes(scale)) slugs=["chi-square"];
     }
   } else if(objective==="association"){
-    rationale.push("You are examining association rather than pre–post effectiveness.");
+    rationale.push(tt("The aim is to assess an association between indicators.","Цель – оценить связь между показателями."));
     if(["nominal","binary"].includes(scale)) slugs=["chi-square","fisher-exact"];
     else if(scale==="ordinal") slugs=["spearman"];
     else if(scale==="interval") slugs=normal==="yes"?["pearson","spearman"]:["spearman","pearson"];
   } else if(objective==="quality"){
-    rationale.push("Instrument/rater quality should be checked before using the scores as evidence of effectiveness.");
+    rationale.push(tt("The aim is to assess the reliability of an instrument or expert ratings.","Цель – оценить надёжность инструмента или экспертных оценок."));
     if(design==="items") slugs=["cronbach-alpha"];
     else if(design==="twoRaters") slugs=["cohen-kappa"];
     else if(design==="multiRaters") slugs=["kendall-w"];
   } else if(objective==="mastery"){
-    rationale.push("You are evaluating criterion attainment or the magnitude of learning gain.");
+    rationale.push(tt("The aim is to assess a predefined standard or learning gain.","Цель – оценить достижение заданного стандарта или учебный прирост."));
     slugs=["bespalko","hake-g"];
   }
 
@@ -101,32 +142,36 @@ function recommend(){
 function renderSummary(objective,scale,design,normal,n,rationale){
   const box=byId("selectorSummary");
   if(!box) return;
-  const label=id=>byId(id)?.selectedOptions[0]?.text || "Not selected";
+  const label=id=>byId(id)?.selectedOptions[0]?.text || tt("Not selected","Не выбрано");
   box.innerHTML=`<div class="selector-summary">
-    <div class="metric">Research aim<b>${esc(label("objective"))}</b></div>
-    <div class="metric">Scale<b>${esc(label("scale"))}</b></div>
-    <div class="metric">Design<b>${esc(label("design"))}</b></div>
-    <div class="metric">Approximate N<b>${n||"Not entered"}</b></div>
-  </div><div class="note blue"><b>Decision logic:</b> ${esc(rationale.join(" ")) || "Complete the questions to generate the logic."}</div>`;
+    <div class="metric">${tt("Purpose","Цель")}<b>${esc(label("objective"))}</b></div>
+    <div class="metric">${tt("Data","Данные")}<b>${esc(label("scale"))}</b></div>
+    <div class="metric">${tt("Design","Дизайн")}<b>${esc(label("design"))}</b></div>
+    <div class="metric">${tt("Sample size","Размер выборки")}<b>${n||tt("Not entered","Не указан")}</b></div>
+  </div><div class="note blue"><b>${tt("Selection logic:","Логика выбора:")}</b> ${esc(rationale.join(" ")) || tt("Complete the form to generate the explanation.","Заполните форму, чтобы получить объяснение.")}</div>`;
 }
 function renderRecs(slugs,n,design){
   const box=byId("recommendations");
   if(!slugs.length){
-    box.innerHTML='<div class="note">No calculator in this static version fits all selected conditions. Recheck the research aim, scale and design. A statistical method should not be chosen solely because it returns a significant result.</div>';return;
+    box.innerHTML=`<div class="note">${tt("No calculator matches all selected conditions. Check the purpose, data type and design.","Ни один калькулятор не соответствует всем выбранным условиям. Проверьте цель, тип данных и дизайн.")}</div>`;return;
   }
   box.innerHTML=slugs.map((slug,idx)=>{
     const m=METHODS.find(x=>x.slug===slug),d=sampleDiagnostic(slug,n,design);
-    return `<div class="rec"><div><h3>${idx===0?"Primary recommendation: ":"Alternative: "}${esc(m.name)}</h3><div class="muted">${esc(m.desc)}</div><div class="badges"><span class="badge">${esc(m.scale)}</span><span class="badge">${esc(m.samples)}</span></div><div class="diagnostic ${d.cls}"><b>Sample-size check:</b> ${esc(d.text)}</div></div><a class="btn primary" href="methods/${m.slug}.html">Open calculator →</a></div>`
+    const ru=window.Lang?.method(slug);
+    const desc=window.Lang?.get()==="ru"&&ru?ru.desc:m.desc;
+    return `<div class="rec"><div><h3>${idx===0?tt("Recommended: ","Рекомендуется: "):tt("Alternative: ","Альтернатива: ")}${esc(m.name)}</h3><div class="muted">${esc(desc)}</div><div class="diagnostic ${d.cls}"><b>${tt("Sample check:","Проверка выборки:")}</b> ${esc(d.text)}</div></div><a class="btn primary" href="methods/${m.slug}.html">${tt("Open calculator","Открыть калькулятор")}</a></div>`
   }).join("");
 }
 function updateProgress(){
-  const vals=["objective","scale","design","sampleSize"].map(id=>byId(id)?.value);
+  const vals=["objective","scale","design","normality","sampleSize"].map(id=>byId(id)?.value);
   const done=vals.filter(Boolean).length;
   document.querySelectorAll(".tree-dot").forEach((el,i)=>el.classList.toggle("active",i<done));
 }
 document.addEventListener("DOMContentLoaded",()=>{
-  document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("change",recommend));
-  document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("input",recommend));
+  document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("change",()=>{updateChoiceHelp();recommend()}));
+  document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("input",()=>{updateChoiceHelp();recommend()}));
   byId("recommendBtn")?.addEventListener("click",recommend);
+  updateChoiceHelp();
   updateProgress();
 });
+document.addEventListener("languagechange",()=>{updateChoiceHelp();recommend()});

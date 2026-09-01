@@ -6,7 +6,7 @@ A static, English-language educational website for selecting and applying statis
 
 1. Create a new GitHub repository.
 2. Upload the contents of this folder so that `index.html` is in the repository root.
-3. Open **Settings → Pages**.
+3. Open **Settings**, then **Pages**.
 4. Under **Build and deployment**, choose **Deploy from a branch**.
 5. Select the `main` branch and `/ (root)`.
 6. Save. GitHub will show the public Pages URL after deployment.
@@ -15,14 +15,15 @@ No server, database or build process is required.
 
 ## Structure
 
-- `index.html` — method selector.
-- `methods.html` — directory of implemented calculators.
-- `guide.html` — study-design and interpretation guide.
-- `methods/*.html` — individual method pages.
-- `assets/css/style.css` — shared responsive design.
-- `assets/js/stats.js` — statistical functions.
-- `assets/js/app.js` — method recommendation logic.
-- `assets/js/method-engine.js` — calculator/interpreter logic.
+- `index.html` – method selector.
+- `methods.html` – directory of implemented calculators.
+- `guide.html` – study-design and interpretation guide.
+- `methods/*.html` – individual method pages.
+- `assets/css/style.css` – shared responsive design.
+- `assets/js/stats.js` – statistical functions.
+- `assets/js/app.js` – method recommendation logic.
+- `assets/js/method-engine.js` – calculator and interpretation logic.
+- `assets/js/site.js` – English and Russian interface support.
 
 ## Implemented methods
 
@@ -40,5 +41,7 @@ The current version also includes:
 - automatic small-sample diagnostics for each recommended method;
 - 95% confidence intervals where they can be estimated from the entered data;
 - a separate **What can you conclude?** interpretation block;
-- automatically generated Chapter 4 / Results prose with a copy button;
+- automatically generated Result Report with a copy button;
+- bilingual English and Russian interface;
+- result charts generated without external libraries;
 - explicit separation of statistical significance, effect magnitude and causal claims.
