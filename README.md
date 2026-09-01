@@ -44,4 +44,7 @@ The current version also includes:
 - automatically generated Result Report with a copy button;
 - bilingual English and Russian interface;
 - result charts generated without external libraries;
+- method-specific educational scenarios, observation-unit guidance, data sources and paste-ready examples on all 17 calculator pages;
+- editable educational names for measurements, groups, indicators and raters, reused in charts and result reports;
+- a short **What this chart shows** explanation above every result visualization;
 - explicit separation of statistical significance, effect magnitude and causal claims.
