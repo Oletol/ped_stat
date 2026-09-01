@@ -25,23 +25,23 @@
     "7 pairs; preferably ≥30":"7 пар, желательно не менее 30"
   };
   const METHOD_RU={
-    "sign-test":{desc:"Проверяет, преобладают ли положительные или отрицательные изменения, не учитывая величину каждого изменения.",block:"Одна группа, измерения до и после"},
-    "wilcoxon":{desc:"Проверяет изменение в связанных измерениях с учётом направления и величины различий.",block:"Одна группа, измерения до и после"},
-    "paired-t":{desc:"Сравнивает среднее значение до и после у одних и тех же участников.",block:"Одна группа, измерения до и после"},
-    "mcnemar":{desc:"Проверяет изменение доли бинарного результата между двумя связанными измерениями.",block:"Одна группа, измерения до и после"},
-    "hake-g":{desc:"Показывает, какая доля возможного улучшения достигнута. Это описательный показатель, а не тест значимости.",block:"Одна группа, измерения до и после"},
-    "bespalko":{desc:"Показывает долю правильно выполненных существенных операций. Значение Ka не менее 0,70 используется как заранее заданный порог освоения.",block:"Оценка достижения критерия"},
-    "friedman":{desc:"Проверяет различия между тремя или более связанными измерениями. После значимого результата нужны попарные сравнения.",block:"Одна группа, три измерения и более"},
-    "mann-whitney":{desc:"Сравнивает распределения и ранги двух независимых групп без требования нормальности.",block:"Две независимые группы"},
-    "independent-t":{desc:"Сравнивает средние двух независимых групп. Вариант Уэлча не требует равенства дисперсий.",block:"Две независимые группы"},
-    "fisher-exact":{desc:"Проверяет различие или связь между двумя бинарными долями с помощью точного расчёта таблицы 2 × 2.",block:"Две независимые группы"},
-    "chi-square":{desc:"Проверяет связь между двумя категориальными переменными или различие категориальных распределений.",block:"Независимые категориальные данные"},
-    "spearman":{desc:"Оценивает монотонную связь по рангам без требования нормальности.",block:"Связь между показателями"},
-    "pearson":{desc:"Оценивает линейную связь между двумя количественными показателями и чувствителен к выбросам.",block:"Связь между показателями"},
-    "cronbach-alpha":{desc:"Оценивает внутреннюю согласованность заданий теста или пунктов шкалы.",block:"Качество измерения"},
-    "cohen-kappa":{desc:"Оценивает согласие двух экспертов сверх уровня случайного совпадения.",block:"Качество измерения"},
-    "kendall-w":{desc:"Оценивает согласованность рангов, выставленных тремя или более экспертами одним объектам.",block:"Качество измерения"},
-    "one-way-anova":{desc:"Проверяет, различается ли хотя бы одно среднее среди трёх или более независимых групп.",block:"Три независимые группы и более"}
+    "sign-test":{name:"Критерий знаков (G)",desc:"Проверяет, преобладают ли положительные или отрицательные изменения, не учитывая величину каждого изменения.",block:"Одна группа, измерения до и после"},
+    "wilcoxon":{name:"Критерий знаковых рангов Уилкоксона",desc:"Проверяет изменение в связанных измерениях с учётом направления и величины различий.",block:"Одна группа, измерения до и после"},
+    "paired-t":{name:"Парный t-критерий",desc:"Сравнивает среднее значение до и после у одних и тех же участников.",block:"Одна группа, измерения до и после"},
+    "mcnemar":{name:"Точный критерий Мак-Немара",desc:"Проверяет изменение доли бинарного результата между двумя связанными измерениями.",block:"Одна группа, измерения до и после"},
+    "hake-g":{name:"Нормализованный прирост Хейка (g)",desc:"Показывает, какая доля возможного улучшения достигнута. Это описательный показатель, а не тест значимости.",block:"Одна группа, измерения до и после"},
+    "bespalko":{name:"Коэффициент усвоения Беспалько (Ka)",desc:"Показывает долю правильно выполненных существенных операций. Значение Ka не менее 0,70 используется как заранее заданный порог освоения.",block:"Оценка достижения критерия"},
+    "friedman":{name:"Критерий Фридмана",desc:"Проверяет различия между тремя или более связанными измерениями. После значимого результата нужны попарные сравнения.",block:"Одна группа, три измерения и более"},
+    "mann-whitney":{name:"U-критерий Манна–Уитни",desc:"Сравнивает распределения и ранги двух независимых групп без требования нормальности.",block:"Две независимые группы"},
+    "independent-t":{name:"t-критерий Уэлча для независимых выборок",desc:"Сравнивает средние двух независимых групп. Вариант Уэлча не требует равенства дисперсий.",block:"Две независимые группы"},
+    "fisher-exact":{name:"Точный критерий Фишера (2 × 2)",desc:"Проверяет различие или связь между двумя бинарными долями с помощью точного расчёта таблицы 2 × 2.",block:"Две независимые группы"},
+    "chi-square":{name:"Критерий хи-квадрат Пирсона",desc:"Проверяет связь между двумя категориальными переменными или различие категориальных распределений.",block:"Независимые категориальные данные"},
+    "spearman":{name:"Ранговая корреляция Спирмена",desc:"Оценивает монотонную связь по рангам без требования нормальности.",block:"Связь между показателями"},
+    "pearson":{name:"Корреляция Пирсона",desc:"Оценивает линейную связь между двумя количественными показателями и чувствителен к выбросам.",block:"Связь между показателями"},
+    "cronbach-alpha":{name:"Альфа Кронбаха",desc:"Оценивает внутреннюю согласованность заданий теста или пунктов шкалы.",block:"Качество измерения"},
+    "cohen-kappa":{name:"Каппа Коэна",desc:"Оценивает согласие двух экспертов сверх уровня случайного совпадения.",block:"Качество измерения"},
+    "kendall-w":{name:"W Кендалла",desc:"Оценивает согласованность рангов, выставленных тремя или более экспертами одним объектам.",block:"Качество измерения"},
+    "one-way-anova":{name:"Однофакторный дисперсионный анализ",desc:"Проверяет, различается ли хотя бы одно среднее среди трёх или более независимых групп.",block:"Три независимые группы и более"}
   };
   const DESC_EN={};
   const CONDITION_RU={
@@ -113,11 +113,14 @@
     const calc=document.body.dataset.calc;if(!calc)return;
     document.body.classList.add("method-page");
     document.querySelectorAll(".hero .eyebrow,.hero p").forEach(el=>el.remove());
+    const slug=location.pathname.split("/").pop().replace(".html","");
+    const methodTitle=document.querySelector(".hero h1");if(methodTitle&&!methodTitle.dataset.originalEn)methodTitle.dataset.originalEn=methodTitle.textContent;
+    if(methodTitle)methodTitle.textContent=get()==="ru"?(METHOD_RU[slug]?.name||methodTitle.dataset.originalEn):methodTitle.dataset.originalEn;
+    if(methodTitle)document.title=methodTitle.textContent+" | "+text("Pedagogical Statistics Lab","Лаборатория педагогической статистики");
     const kickers=document.querySelectorAll(".kicker");if(kickers[0])kickers[0].textContent=translateExact("Data entry");if(kickers[1])kickers[1].textContent=translateExact("Method note");
     const mainH2=document.querySelector(".method-layout section.card h2");if(mainH2)mainH2.textContent=translateExact("Calculate the result");
     const aside=document.querySelector(".method-layout aside.card");if(aside){
       const h2=aside.querySelector("h2");if(h2)h2.textContent=translateExact("When to use it");
-      const slug=location.pathname.split("/").pop().replace(".html","");
       const desc=aside.querySelector(":scope > p.muted");if(desc&&!desc.dataset.originalEn)desc.dataset.originalEn=desc.textContent;
       if(desc&&get()==="ru"&&METHOD_RU[slug])desc.textContent=METHOD_RU[slug].desc;
       if(desc&&get()==="en")desc.textContent=desc.dataset.originalEn;
@@ -136,7 +139,7 @@
   }
   function localizeDirectory(){
     if(!document.body.classList.contains("directory-page"))return;
-    document.querySelectorAll(".method-card").forEach(card=>{const slug=card.getAttribute("href").split("/").pop().replace(".html","");const info=METHOD_RU[slug];if(!info)return;const d=card.querySelector(".muted");if(d){if(!d.dataset.originalEn)d.dataset.originalEn=d.textContent.trim();d.textContent=get()==="ru"?info.desc:d.dataset.originalEn;}const badges=card.querySelectorAll(".badge");badges.forEach(b=>{if(!b.dataset.originalEn)b.dataset.originalEn=b.textContent.trim();b.textContent=get()==="ru"?(COMMON[b.dataset.originalEn]||info.block||b.dataset.originalEn):b.dataset.originalEn;});});
+    document.querySelectorAll(".method-card").forEach(card=>{const slug=card.getAttribute("href").split("/").pop().replace(".html","");const info=METHOD_RU[slug];if(!info)return;const h=card.querySelector("h3");if(h){if(!h.dataset.originalEn)h.dataset.originalEn=h.textContent.trim();h.textContent=get()==="ru"?info.name:h.dataset.originalEn;}const d=card.querySelector(".muted");if(d){if(!d.dataset.originalEn)d.dataset.originalEn=d.textContent.trim();d.textContent=get()==="ru"?info.desc:d.dataset.originalEn;}const badges=card.querySelectorAll(".badge");badges.forEach(b=>{if(!b.dataset.originalEn)b.dataset.originalEn=b.textContent.trim();b.textContent=get()==="ru"?(COMMON[b.dataset.originalEn]||info.block||b.dataset.originalEn):b.dataset.originalEn;});});
   }
   function apply(){applyData();localizeCommon();localizeMethod();localizeDirectory();}
   document.addEventListener("DOMContentLoaded",()=>{addSwitch();apply();});

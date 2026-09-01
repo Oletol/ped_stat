@@ -159,7 +159,8 @@ function renderRecs(slugs,n,design){
     const m=METHODS.find(x=>x.slug===slug),d=sampleDiagnostic(slug,n,design);
     const ru=window.Lang?.method(slug);
     const desc=window.Lang?.get()==="ru"&&ru?ru.desc:m.desc;
-    return `<div class="rec"><div><h3>${idx===0?tt("Recommended: ","Рекомендуется: "):tt("Alternative: ","Альтернатива: ")}${esc(m.name)}</h3><div class="muted">${esc(desc)}</div><div class="diagnostic ${d.cls}"><b>${tt("Sample check:","Проверка выборки:")}</b> ${esc(d.text)}</div></div><a class="btn primary" href="methods/${m.slug}.html">${tt("Open calculator","Открыть калькулятор")}</a></div>`
+    const name=window.Lang?.get()==="ru"&&ru?ru.name:m.name;
+    return `<div class="rec"><div><h3>${idx===0?tt("Recommended: ","Рекомендуется: "):tt("Alternative: ","Альтернатива: ")}${esc(name)}</h3><div class="muted">${esc(desc)}</div><div class="diagnostic ${d.cls}"><b>${tt("Sample check:","Проверка выборки:")}</b> ${esc(d.text)}</div></div><a class="btn primary" href="methods/${m.slug}.html">${tt("Open calculator","Открыть калькулятор")}</a></div>`
   }).join("");
 }
 function updateProgress(){
