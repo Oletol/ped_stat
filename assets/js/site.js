@@ -105,6 +105,7 @@
     box.addEventListener("click",e=>{const v=e.target.dataset.langBtn;if(!v)return;localStorage.setItem(KEY,v);apply();document.dispatchEvent(new CustomEvent("languagechange"));});
   }
   function localizeCommon(){
+    const mark=document.querySelector(".brand-mark");if(mark)mark.textContent="PS";
     const brand=document.querySelector(".brand span:last-child");if(brand)brand.textContent=text("Pedagogical Statistics Lab","Лаборатория педагогической статистики");
     const links=document.querySelectorAll(".nav-links a");["Method selector","All methods","Study design guide"].forEach((v,i)=>{if(links[i])links[i].textContent=translateExact(v)});
     const footer=document.querySelector(".footer");if(footer)footer.textContent=FOOTER[get()];
@@ -117,7 +118,15 @@
     const methodTitle=document.querySelector(".hero h1");if(methodTitle&&!methodTitle.dataset.originalEn)methodTitle.dataset.originalEn=methodTitle.textContent;
     if(methodTitle)methodTitle.textContent=get()==="ru"?(METHOD_RU[slug]?.name||methodTitle.dataset.originalEn):methodTitle.dataset.originalEn;
     if(methodTitle)document.title=methodTitle.textContent+" | "+text("Pedagogical Statistics Lab","Лаборатория педагогической статистики");
-    const kickers=document.querySelectorAll(".kicker");if(kickers[0])kickers[0].textContent=translateExact("Data entry");if(kickers[1])kickers[1].textContent=translateExact("Method note");
+    const hero=document.querySelector(".hero");
+    if(hero&&!hero.querySelector(".breadcrumb")){
+      const crumb=document.createElement("div");crumb.className="breadcrumb";
+      crumb.innerHTML=`<a href="../methods.html">${text("All methods","Все методы")}</a><span>›</span><span>${methodTitle?.textContent||""}</span>`;
+      hero.insertBefore(crumb,hero.firstChild);
+    }else if(hero?.querySelector(".breadcrumb")){
+      const parts=hero.querySelectorAll(".breadcrumb>*");if(parts[0])parts[0].textContent=text("All methods","Все методы");if(parts[2])parts[2].textContent=methodTitle?.textContent||"";
+    }
+    const dataKicker=document.querySelector(".method-layout section.card > .kicker"),noteKicker=document.querySelector(".method-layout aside.card > .kicker");if(dataKicker)dataKicker.textContent=translateExact("Data entry");if(noteKicker)noteKicker.textContent=translateExact("Method note");
     const mainH2=document.querySelector(".method-layout section.card h2");if(mainH2)mainH2.textContent=translateExact("Calculate the result");
     const aside=document.querySelector(".method-layout aside.card");if(aside){
       const h2=aside.querySelector("h2");if(h2)h2.textContent=translateExact("When to use it");
@@ -142,6 +151,6 @@
     document.querySelectorAll(".method-card").forEach(card=>{const slug=card.getAttribute("href").split("/").pop().replace(".html","");const info=METHOD_RU[slug];if(!info)return;const h=card.querySelector("h3");if(h){if(!h.dataset.originalEn)h.dataset.originalEn=h.textContent.trim();h.textContent=get()==="ru"?info.name:h.dataset.originalEn;}const d=card.querySelector(".muted");if(d){if(!d.dataset.originalEn)d.dataset.originalEn=d.textContent.trim();d.textContent=get()==="ru"?info.desc:d.dataset.originalEn;}const badges=card.querySelectorAll(".badge");badges.forEach(b=>{if(!b.dataset.originalEn)b.dataset.originalEn=b.textContent.trim();b.textContent=get()==="ru"?(COMMON[b.dataset.originalEn]||info.block||b.dataset.originalEn):b.dataset.originalEn;});});
   }
   function apply(){applyData();localizeCommon();localizeMethod();localizeDirectory();}
-  document.addEventListener("DOMContentLoaded",()=>{addSwitch();apply();});
+  document.addEventListener("DOMContentLoaded",()=>{addSwitch();document.querySelectorAll(".nav-links a").forEach(a=>{const here=location.pathname.split("/").pop()||"index.html",target=a.getAttribute("href")?.split("/").pop();a.classList.toggle("active",target===here||(document.body.dataset.calc&&target==="methods.html"));});apply();});
   window.Lang={get,text,apply,method:slug=>METHOD_RU[slug],translateExact};
 })();

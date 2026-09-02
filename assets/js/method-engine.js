@@ -32,11 +32,20 @@ function barChart(chart){
   const values=chart.values.map(Number),finite=values.filter(Number.isFinite);if(!finite.length)return "";
   const min=Math.min(0,...finite),max=Math.max(0,...finite),range=max-min||1;
   const bars=values.map((value,i)=>{
-    const height=Math.max(3,Math.abs(value)/range*150),left=24+i*(240/values.length),width=Math.max(22,190/values.length);
-    const y=value>=0?170-height:20;return `<g><rect x="${left}" y="${y}" width="${width}" height="${height}" rx="6" fill="${i%2?'#4ec7cf':'#245ee8'}"></rect><text x="${left+width/2}" y="${Math.max(14,y-6)}" text-anchor="middle">${escHtml(Stats.fmt(value,2))}</text><text x="${left+width/2}" y="195" text-anchor="middle">${escHtml(chart.labels[i])}</text></g>`;
+    const height=Math.max(3,Math.abs(value)/range*142),left=46+i*(250/values.length),width=Math.max(22,176/values.length);
+    const y=value>=0?166-height:20;return `<g><rect x="${left}" y="${y}" width="${width}" height="${height}" rx="2" fill="${i%2?'#6f987f':'#315d88'}"></rect><text x="${left+width/2}" y="${Math.max(14,y-7)}" text-anchor="middle" font-weight="700">${escHtml(Stats.fmt(value,2))}</text><text x="${left+width/2}" y="193" text-anchor="middle">${escHtml(chart.labels[i])}</text></g>`;
   }).join("");
   const note=chart.note||mt(`Each bar shows the calculated summary for ${chart.labels.join(" and ")}.`,`Каждый столбец показывает рассчитанное итоговое значение для указанных данных.`);
-  return `<div class="chart-box"><h4>${mt("What this chart shows","Что показывает график")}</h4><p class="chart-explainer">${escHtml(note)}</p><svg class="result-chart" viewBox="0 0 290 210" role="img" aria-label="${mt("Result chart","График результата")}"><line x1="12" y1="171" x2="282" y2="171" stroke="#cbd7eb"></line>${bars}</svg></div>`;
+  return `<div class="chart-box"><h4>${mt("What this chart shows","Что показывает график")}</h4><p class="chart-explainer">${escHtml(note)}</p><svg class="result-chart" viewBox="0 0 340 210" role="img" aria-label="${mt("Result chart","График результата")}"><line x1="28" y1="166" x2="326" y2="166" stroke="#9cabbc"></line><line x1="28" y1="22" x2="28" y2="166" stroke="#9cabbc"></line>${bars}</svg></div>`;
+}
+function slopeChart(chart){
+  const a=chart.a,b=chart.b;if(!a?.length||a.length!==b?.length)return "";
+  const all=[...a,...b],min=Math.min(...all),max=Math.max(...all),range=max-min||1,y=v=>172-(v-min)/range*132;
+  const rows=a.map((v,i)=>{const improved=b[i]>v,declined=b[i]<v,color=improved?"#4f8467":declined?"#a45a52":"#9aa7b5";return `<g opacity=".68"><line x1="62" y1="${y(v)}" x2="278" y2="${y(b[i])}" stroke="${color}" stroke-width="1.4"></line><circle cx="62" cy="${y(v)}" r="2.7" fill="${color}"></circle><circle cx="278" cy="${y(b[i])}" r="2.7" fill="${color}"></circle></g>`}).join("");
+  const ma=Stats.mean(a),mb=Stats.mean(b);
+  const ticks=[0,.25,.5,.75,1].map(t=>{const val=min+t*range,yy=y(val);return `<g><line x1="42" y1="${yy}" x2="300" y2="${yy}" stroke="#e1e7ed"></line><text x="35" y="${yy+4}" text-anchor="end">${escHtml(Stats.fmt(val,1))}</text></g>`}).join("");
+  const note=chart.note||mt("Each line connects one learner’s two measurements. Green indicates improvement, red indicates decline, and the dark line shows the group mean.","Каждая линия соединяет два измерения одного учащегося. Зелёный цвет показывает улучшение, красный — ухудшение, тёмная линия — среднее группы.");
+  return `<div class="chart-box"><h4>${mt("What this chart shows","Что показывает график")}</h4><p class="chart-explainer">${escHtml(note)}</p><svg class="result-chart" viewBox="0 0 340 230" role="img" aria-label="${mt("Paired score chart","График связанных результатов")}">${ticks}${rows}<line x1="62" y1="${y(ma)}" x2="278" y2="${y(mb)}" stroke="#14294b" stroke-width="4"></line><circle cx="62" cy="${y(ma)}" r="4.5" fill="#14294b"></circle><circle cx="278" cy="${y(mb)}" r="4.5" fill="#14294b"></circle><text x="62" y="204" text-anchor="middle">${escHtml(chart.labels[0])}</text><text x="278" y="204" text-anchor="middle">${escHtml(chart.labels[1])}</text><g transform="translate(62 220)"><circle r="3" fill="#4f8467"></circle><text x="8" y="4">${mt("Improved","Улучшение")}</text><circle cx="92" r="3" fill="#a45a52"></circle><text x="100" y="4">${mt("Declined","Ухудшение")}</text><line x1="185" x2="201" stroke="#14294b" stroke-width="3"></line><text x="207" y="4">${mt("Group mean","Среднее")}</text></g></svg></div>`;
 }
 function scatterChart(chart){
   const xs=chart.x,ys=chart.y;if(!xs?.length||xs.length!==ys?.length)return "";
@@ -51,7 +60,7 @@ function showResult(kind,title,metrics,body,conclusion,report,chart){
   if(isRu())report=`Для анализа применён метод «${document.querySelector(".hero h1")?.textContent||"статистический тест"}». ${metrics.map(x=>`${x[0]} = ${x[1]}`).join("; ")}. ${body} ${conclusion}`;
   box.innerHTML=`<h3>${title}</h3><div class="result-grid">${metrics.map(x=>`<div class="metric">${x[0]}<b>${x[1]}</b></div>`).join("")}</div>
   <div class="muted">${body}</div>
-  ${chart?(chart.type==="scatter"?scatterChart(chart):barChart(chart)):""}
+  ${chart?(chart.type==="scatter"?scatterChart(chart):chart.type==="slope"?slopeChart(chart):barChart(chart)):""}
   <div class="conclusion-box"><h4>${mt("What can you conclude?","Какой вывод допустим?")}</h4><div class="muted">${conclusion}</div></div>
   ${reportBlock(report)}`;
   q("copyReportBtn")?.addEventListener("click",async()=>{
@@ -75,7 +84,7 @@ function calculate(){
     body=mt(`Zero changes excluded: ${ties}. Positive-change proportion = ${(pos/n*100).toFixed(1)}%; 95% Wilson CI ${(ci[0]*100).toFixed(1)}–${(ci[1]*100).toFixed(1)}%. ${significanceText(p)}`,`Нулевые изменения исключены: ${ties}. Доля положительных изменений = ${(pos/n*100).toFixed(1)}%; 95% ДИ Уилсона ${(ci[0]*100).toFixed(1)}–${(ci[1]*100).toFixed(1)}%. ${significanceText(p)}`);
     conclusion=conclusionFor(p,pos>neg?"a predominance of positive change":"a predominance of negative change")+" "+causalCaution();
     report=`A paired Sign Test was used to evaluate the direction of change. Of ${n} non-zero paired changes, ${pos} were positive and ${neg} were negative (${ties} zero changes were excluded). The exact two-sided p-value was ${Stats.pFmt(p)}. The estimated proportion of positive non-zero changes was ${(pos/n).toFixed(3)}, 95% Wilson CI ${(ci[0]).toFixed(3)}–${(ci[1]).toFixed(3)}. ${p<.05?"The null hypothesis of equal probabilities of positive and negative change was rejected at α = .05.":"The null hypothesis was not rejected at α = .05."}`;
-    chart={labels:[mt("Positive","Положительные"),mt("Negative","Отрицательные")],values:[pos,neg]};
+    chart={type:"slope",a,b,labels:[studyName("labelA",mt("Pre-test","До обучения")),studyName("labelB",mt("Post-test","После обучения"))]};
   }
   else if(calc==="wilcoxon"){
     const [a,b]=parsePair(); r=Stats.wilcoxon(a,b); validateMin(r.n,5,"At least five non-zero paired differences are required.");
@@ -85,7 +94,7 @@ function calculate(){
     body=mt(`Positive rank sum = ${Stats.fmt(r.Wp,2)}; negative rank sum = ${Stats.fmt(r.Wm,2)}; median change = ${Stats.fmt(medChange,2)}; effect r ≈ ${Stats.fmt(r.r,3)}. ${significanceText(p)}`,`Сумма положительных рангов = ${Stats.fmt(r.Wp,2)}; сумма отрицательных рангов = ${Stats.fmt(r.Wm,2)}; медиана изменения = ${Stats.fmt(medChange,2)}; размер эффекта r ≈ ${Stats.fmt(r.r,3)}. ${significanceText(p)}`);
     conclusion=conclusionFor(p,medChange>0?"an upward paired shift":medChange<0?"a downward paired shift":null)+" "+causalCaution();
     report=`A Wilcoxon signed-rank test was conducted to compare paired measurements (N = ${r.n} non-zero pairs). The test statistic was T = ${Stats.fmt(r.T,2)}, p ${Stats.pFmt(p)}, with an approximate effect size r = ${Stats.fmt(r.r,3)}. The median raw change was ${Stats.fmt(medChange,2)}. ${p<.05?"The paired distributions differed significantly at α = .05.":"The paired difference did not reach statistical significance at α = .05."}`;
-    chart={labels:[mt("Positive ranks","Положительные ранги"),mt("Negative ranks","Отрицательные ранги")],values:[r.Wp,r.Wm]};
+    chart={type:"slope",a,b,labels:[studyName("labelA",mt("Pre-test","До обучения")),studyName("labelB",mt("Post-test","После обучения"))]};
   }
   else if(calc==="pairedT"){
     const [a,b]=parsePair(); validateMin(a.length,3); r=Stats.pairedT(a,b); p=r.p;kind=p<.05?"success":"warning"; const ci=Stats.pairedDiffCI(a,b);
@@ -94,7 +103,7 @@ function calculate(){
     body=mt(`Mean change (post minus pre) = ${Stats.fmt(r.md,3)}, 95% CI ${ciText(ci[0],ci[1],3)}; paired Cohen's d = ${Stats.fmt(r.effect,3)}. ${significanceText(p)} The paired differences should be approximately normally distributed.`,`Среднее изменение после обучения относительно исходного измерения = ${Stats.fmt(r.md,3)}, 95% ДИ ${ciText(ci[0],ci[1],3)}; парный d Коэна = ${Stats.fmt(r.effect,3)}. ${significanceText(p)} Разности должны иметь приблизительно нормальное распределение.`);
     conclusion=conclusionFor(p,r.md>0?"a positive mean pre–post change":"a negative mean pre–post change")+" "+causalCaution();
     report=`A paired-samples t-test was used to compare ${nameA} and ${nameB} scores (N = ${r.n}). The mean change (${nameB} − ${nameA}) was ${Stats.fmt(r.md,3)}, 95% CI ${ciText(ci[0],ci[1],3)}. The difference was ${p<.05?"statistically significant":"not statistically significant"}, t(${Stats.fmt(r.df,0)}) = ${Stats.fmt(r.t,3)}, p ${Stats.pFmt(p)}. The paired effect size was Cohen's d = ${Stats.fmt(r.effect,3)}.`;
-    chart={labels:[`${nameA} mean`,`${nameB} mean`],values:[Stats.mean(a),Stats.mean(b)],note:`Bars compare the mean score at ${nameA} and ${nameB} for the same learners.`};
+    chart={type:"slope",a,b,labels:[nameA,nameB]};
   }
   else if(calc==="mcnemar"){
     const a=Stats.parseNums(q("a").value),b=Stats.parseNums(q("b").value); if(a.length!==b.length||!a.length)throw new Error("Enter equal-length binary vectors using 0 and 1.");

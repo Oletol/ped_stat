@@ -21,6 +21,26 @@ const METHOD_RULES = {
   "one-way-anova":{recommended:15, preferred:25, note:"Recommendation refers roughly to observations per group; check residual assumptions."}
 };
 
+const PEDAGOGICAL_DESC={
+  "sign-test":["Use pre-test and post-test scores from the same learners to ask whether more students improved than declined. The size of each change is deliberately ignored.","Используйте результаты до и после обучения одних и тех же учащихся, чтобы проверить, улучшился ли результат у большинства. Величина каждого изменения не учитывается."],
+  "wilcoxon":["Compare pre-test and post-test scores, rubric levels, or other paired outcomes for the same learners when differences are non-normal or ordinal.","Сравнивайте результаты до и после обучения или уровни рубрики у тех же учащихся, если разности ненормальны либо данные порядковые."],
+  "paired-t":["Compare average pre-test and post-test scores for the same learners when the paired differences are reasonably normal and free of strong outliers.","Сравнивайте средние результаты до и после обучения у тех же учащихся, если разности близки к нормальным и не имеют сильных выбросов."],
+  "mcnemar":["Check whether the proportion passing, completing, or answering correctly changed for the same learners between two occasions.","Проверяйте, изменилась ли доля сдавших, завершивших курс или ответивших правильно среди тех же учащихся между двумя измерениями."],
+  "hake-g":["Describe how much of the possible improvement from pre-test to post-test was achieved; use it as a learning-gain indicator, not a significance test.","Опишите, какая доля возможного улучшения достигнута между входным и итоговым тестом; это показатель прироста, а не критерий значимости."],
+  "bespalko":["Assess whether a learner or group reached a predefined mastery standard based on correctly completed essential learning operations.","Оцените, достиг ли учащийся или группа заранее заданного уровня освоения по правильно выполненным существенным операциям."],
+  "friedman":["Compare the same learners at three or more occasions, such as pre-test, mid-test, and post-test, when a rank-based repeated-measures method is needed.","Сравнивайте тех же учащихся в трёх и более точках, например входной, промежуточный и итоговый тест, ранговым методом повторных измерений."],
+  "mann-whitney":["Compare ordinal or non-normal outcomes from two separate learner groups, such as experimental and control groups.","Сравнивайте порядковые или ненормальные результаты двух отдельных групп учащихся, например экспериментальной и контрольной."],
+  "independent-t":["Compare average numerical outcomes for two separate learner groups, allowing unequal group sizes and variances.","Сравнивайте средние числовые результаты двух отдельных групп учащихся с возможным различием размеров и дисперсий."],
+  "fisher-exact":["Compare a binary result such as pass/fail across two small independent learner groups using a 2 × 2 count table.","Сравнивайте бинарный результат, например зачёт/незачёт, в двух малых независимых группах по таблице частот 2 × 2."],
+  "chi-square":["Examine whether educational outcome categories are distributed differently across groups, for example low/medium/high achievement by course format.","Проверьте, различается ли распределение категорий результата между группами, например низкий/средний/высокий уровень по форматам курса."],
+  "spearman":["Relate two ordered or numerical indicators for the same learners, such as engagement level and post-test score, without requiring a linear relationship.","Свяжите два порядковых или числовых показателя тех же учащихся, например вовлечённость и итоговый балл, без требования линейности."],
+  "pearson":["Measure a linear relationship between two numerical indicators for the same learners or responses, such as automated and expert scores.","Оцените линейную связь двух числовых показателей тех же учащихся или ответов, например автоматической и экспертной оценки."],
+  "cronbach-alpha":["Check whether questionnaire or test items intended to form one educational scale produce consistent scores in a pilot sample.","Проверьте, дают ли пункты анкеты или теста, образующие одну шкалу, согласованные результаты в пилотной выборке."],
+  "cohen-kappa":["Evaluate agreement beyond chance between two categorical raters, such as a human expert and an automated assessment system.","Оцените согласие сверх случайного уровня между двумя категориальными оценщиками, например экспертом и автоматической системой."],
+  "kendall-w":["Evaluate how consistently three or more experts rank the same educational materials, student products, or assessment criteria.","Оцените, насколько согласованно три и более эксперта ранжируют одни и те же учебные материалы, работы или критерии."],
+  "one-way-anova":["Compare average numerical outcomes across three or more separate learner groups or teaching conditions.","Сравнивайте средние числовые результаты трёх и более отдельных групп учащихся или условий обучения."]
+};
+
 function byId(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function selected(id){return byId(id)?.value || ""}
@@ -158,21 +178,46 @@ function renderRecs(slugs,n,design){
   box.innerHTML=slugs.map((slug,idx)=>{
     const m=METHODS.find(x=>x.slug===slug),d=sampleDiagnostic(slug,n,design);
     const ru=window.Lang?.method(slug);
-    const desc=window.Lang?.get()==="ru"&&ru?ru.desc:m.desc;
+    const desc=PEDAGOGICAL_DESC[slug]?.[window.Lang?.get()==="ru"?1:0]||(window.Lang?.get()==="ru"&&ru?ru.desc:m.desc);
     const name=window.Lang?.get()==="ru"&&ru?ru.name:m.name;
     return `<div class="rec"><div><h3>${idx===0?tt("Recommended: ","Рекомендуется: "):tt("Alternative: ","Альтернатива: ")}${esc(name)}</h3><div class="muted">${esc(desc)}</div><div class="diagnostic ${d.cls}"><b>${tt("Sample check:","Проверка выборки:")}</b> ${esc(d.text)}</div></div><a class="btn primary" href="methods/${m.slug}.html">${tt("Open calculator","Открыть калькулятор")}</a></div>`
   }).join("");
 }
 function updateProgress(){
-  const vals=["objective","scale","design","normality","sampleSize"].map(id=>byId(id)?.value);
-  const done=vals.filter(Boolean).length;
-  document.querySelectorAll(".tree-dot").forEach((el,i)=>el.classList.toggle("active",i<done));
+  const ids=["objective","scale","design","normality","sampleSize"];
+  const vals=ids.map(id=>byId(id)?.value),done=vals.filter(Boolean).length;
+  const stepCount=byId("stepCount");if(stepCount)stepCount.textContent=`${done} / 5`;
+  document.querySelectorAll(".tree-question").forEach((el,i)=>el.classList.toggle("complete",Boolean(vals[i])));
+  const questions=[...document.querySelectorAll(".tree-question")],firstIncomplete=vals.findIndex(v=>!v),activeIndex=firstIncomplete<0?questions.length-1:firstIncomplete;
+  questions.forEach((el,i)=>el.classList.toggle("active",i===activeIndex));
+  ids.forEach((id,i)=>{
+    const item=document.querySelector(`[data-snapshot="${id}"]`);if(!item)return;
+    const value=byId(id)?.value;item.classList.toggle("done",Boolean(value));
+    const small=item.querySelector("small");if(!small)return;
+    if(id==="sampleSize") small.textContent=value?tt(`n = ${value} usable`,`n = ${value}, полные данные`):tt("Not entered","Не указана");
+    else small.textContent=value?(byId(id)?.selectedOptions?.[0]?.text||value):tt(i===3?"Not assessed":"Not selected",i===3?"Не оценены":"Не выбрано");
+  });
+  updateEvidenceGuide();
+}
+
+function updateEvidenceGuide(activeOverride){
+  const box=byId("activeExplanation");if(!box)return;
+  const ids=["objective","scale","design","normality"],active=activeOverride||ids.find(id=>!selected(id))||"sampleSize";
+  const copy={
+    objective:["Start with the research purpose","Choose whether you are studying change, association, measurement quality, or mastery. This prevents a calculator from answering a different question.","Начните с цели исследования","Определите, изучаете ли вы изменение, связь, качество измерения или освоение. Так калькулятор не будет отвечать на другой вопрос."],
+    scale:["Name the outcome type","A score, rank, category, and pass/fail result require different methods even when they come from the same course.","Определите тип результата","Баллы, ранги, категории и результат зачёт/незачёт требуют разных методов, даже если получены в одном курсе."],
+    design:["Identify who is being compared","The same learners measured twice produce paired data. Experimental and control groups normally produce independent data. Mixing these structures invalidates the result.","Определите, кого сравнивают","Два измерения тех же учащихся дают связанные данные. Экспериментальная и контрольная группы обычно независимы. Смешение структур делает результат неверным."],
+    normality:["Check the relevant distribution","For pre–post studies, inspect each learner’s change—not the pre-test and post-test columns separately. Strong outliers can change the recommended method.","Проверьте нужное распределение","В исследовании до/после оценивайте изменение каждого учащегося, а не столбцы по отдельности. Сильные выбросы могут изменить рекомендацию."],
+    sampleSize:["Count usable observations","Count complete pairs for repeated measurements, the smallest group for independent comparisons, respondents for a scale, or rated objects for agreement.","Посчитайте полные наблюдения","Считайте полные пары для повторных измерений, наименьшую группу для независимого сравнения, респондентов для шкалы или оценённые объекты для согласия."]
+  }[active];
+  box.innerHTML=`<b>${esc(tt(copy[0],copy[2]))}</b><p>${esc(tt(copy[1],copy[3]))}</p>`;
 }
 document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll(".tree-question").forEach((el,i)=>el.querySelector(".question-heading")?.addEventListener("click",()=>{document.querySelectorAll(".tree-question").forEach(x=>x.classList.remove("active"));el.classList.add("active");updateEvidenceGuide(["objective","scale","design","normality","sampleSize"][i]);}));
   document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("change",()=>{updateChoiceHelp();recommend()}));
   document.querySelectorAll("[data-recommend]").forEach(el=>el.addEventListener("input",()=>{updateChoiceHelp();recommend()}));
   byId("recommendBtn")?.addEventListener("click",recommend);
   updateChoiceHelp();
-  updateProgress();
+  updateProgress();recommend();
 });
 document.addEventListener("languagechange",()=>{updateChoiceHelp();recommend()});
